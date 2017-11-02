@@ -9,7 +9,7 @@ const expressHandleBars = require('express-handlebars');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const dbURL = process.env.MONGODB_URI || 'mongodb:://localhost/Domomaker';
+const dbURL = process.env.MONGODB_URI || 'mongodb:://localhost/DomoMaker';
 
 mongoose.connect(dbURL, (err) => {
   if (err) {
@@ -22,10 +22,10 @@ const router = require('./router.js');
 
 const app = express();
 
-app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted`)));
+app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
 app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
 app.use(compression());
-app.us(bodyParser.urlencoded({
+app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.engine('handlebars', expressHandleBars({ defaultLayout: 'main' }));
