@@ -13,6 +13,10 @@ const makerPage = (req, res) => {
   });
 };
 
+const randPage = (req, res) => {
+  res.render('random', {crsfToken: req.csrfToken()});
+};
+
 const getDomos = (request, response) => {
   const req = request;
   const res = response;
@@ -27,6 +31,25 @@ const getDomos = (request, response) => {
   });
 };
 
+const getRandomDomos = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+    let dlength = docs.length;
+
+    dlength *= Math.random();
+
+    dlength = Math.floor(dlength);
+
+    return res.json({ domo: docs[dlength] });
+  });
+};
+
 const makeDomo = (req, res) => {
   if (!req.body.name || !req.body.age) {
     return res.status(400).json({ error: 'RAWR! Both name and age are required' });
@@ -36,6 +59,7 @@ const makeDomo = (req, res) => {
     name: req.body.name,
     age: req.body.age,
     owner: req.session.account._id,
+    location: req.body.location,
   };
 
   const newDomo = new Domo.DomoModel(domoData);
@@ -59,3 +83,5 @@ const makeDomo = (req, res) => {
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
 module.exports.make = makeDomo;
+module.exports.random = getRandomDomos;
+module.exports.randPage = randPage;
